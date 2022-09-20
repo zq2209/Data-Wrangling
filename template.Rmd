@@ -1,74 +1,69 @@
 ---
-title: "Simple document"
+title: "Data Input"
 output: github_document
 ---
 
+## Data Import: CSVs
 ```{r}
 library(tidyverse)
+library(readxl)
+library(haven)
 ```
-
-
-I'm an R Markdown document!
-
-# Section 1
-
-Here's a **code chunk** that samples from 
-a _normal distribution_:
 
 ```{r}
-samp = rnorm(100)
-length(samp)
-```
-
-# Section 2
-
-I can take the mean of the sample, too!
-The mean is `r round(mean(samp),2)`.
-
-# Section 3
-
-## Plotting from last lecture
-This is going to make a plot! First I generate a dataframe, then use `ggplot` to make scatterplot.
-
-```{r chunk_scatterplot}
-plot_df = 
-  tibble(
-    x = rnorm(n = 1000),
-    y = 1 + 2 * x + rnorm(n = 1000)
-  )
-
-ggplot(plot_df, aes(x = x, y = y)) + geom_point()
+litters_df = read_csv('/Users/qizining/Desktop/Data-Wrangling/FAS_litters.csv')
+litters_df = janitor::clean_names(litters_df)
 ```
 
 
-## Plotting for LA
+Look at the data
 
-This is going to practice learning assessment
-
-```{r Learning Assessment}
-la_df = tibble(
-  norm = rnorm(500, mean = 1),
-  norm_logic = norm > 0,
-  abs_norm = abs(norm)
-)
-
-median = median(la_df$norm)
+```{r}
+head(litters_df)
 ```
 
-The median is `r round(median,2)`.
+```{r, eval=FALSE}
+skimr::skim(litters_df)
+```
 
 
+`read_csv` options
+```{r, eval=FALSE}
+read_csv('/Users/qizining/Desktop/Data-Wrangling/FAS_litters.csv', na = c("", "NA", 999, 88), skip = 2)
+```
 
 
+### Other file formats
+
+We need to read in an excwl sheet
+
+```{r}
+mlb_df = read_excel('/Users/qizining/Desktop/Data-Wrangling/mlb11.xlsx')
+```
+
+```{r}
+lotr_words = read_excel('/Users/qizining/Desktop/Data-Wrangling/LotR_Words.xlsx',
+                        range = 'B3:D6')
+```
+
+### Read in a SAS dataset.
+
+```{r}
+pulse_df = read_sas('/Users/qizining/Desktop/Data-Wrangling/public_pulse_data.sas7bdat')
+```
+
+## Data export
+
+```{r}
+write_csv(lotr_words, file = '/Users/qizining/Desktop/Data-Wrangling/LotR_Words.csv')
+```
 
 
+## Why not base r???
 
-
-
-
-
-
-
+```{r}
+dont_do_this_df = read.csv('/Users/qizining/Desktop/Data-Wrangling/FAS_litters.csv')
+```
 
 
 
